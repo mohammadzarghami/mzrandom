@@ -7,6 +7,7 @@ import platform
 import threading
 from typing import List, Any, Callable
 import random as stdlib_random
+import psutil
 
 class MZRandom:
     """
@@ -52,6 +53,7 @@ class MZRandom:
         if self._prng_algorithm == "xorshift1024":
             self._prng_state = [seed + i for i in range(32)]
         elif self._prng_algorithm == "pcg64":
+            # Initialize both state and inc based on the seed
             self._prng_state = (seed, seed ^ 0xdeadbeef)
         elif self._prng_algorithm == "chacha20":
             self._prng_state = (seed.to_bytes(32, 'little'), [0] * 16) # Not a proper ChaCha20 init
@@ -82,7 +84,12 @@ class MZRandom:
         return os.urandom(64)
 
     def _get_system_stats_entropy(self) -> str:
-        return str(os.times()) + str(sys.getloadavg())
+     entropy = str(os.times())
+     if hasattr(sys, 'getloadavg'):
+        entropy += str(sys.getloadavg())
+     elif os.name == 'nt':  # برای سیستم عامل ویندوز
+        entropy += str(psutil.cpu_percent())
+     return entropy
 
     def _get_gc_entropy(self) -> str:
         return str(gc.get_stats())
@@ -116,9 +123,13 @@ class MZRandom:
         """PCG64 algorithm implementation."""
         state, inc = self._prng_state
         self._prng_state = (state * 6364136223846793005 + (inc | 1), inc)
-        m = ((state >> 18) ^ state) >> 27
-        rot = state >> 59
-        return (m >> rot) / (2**64)
+        output_xor = state ^ (state >> 22)
+        output_rotr = output_xor >> 61 ^ output_xor
+
+        # Ensure output_rotr is treated as an unsigned 64-bit integer
+        output_64bit = output_rotr & 0xFFFFFFFFFFFFFFFF
+
+        return output_64bit / float(2**64)
 
     def _chacha20(self) -> float:
         """ChaCha20 algorithm implementation (simplified)."""
