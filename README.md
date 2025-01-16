@@ -149,7 +149,7 @@ MZRandom is licensed under the **MIT License**. See the [LICENSE](LICENSE) file 
 
 ## Support
 
-For questions, issues, or feature requests, please open an issue on the [GitHub repository](https://github.com/yourusername/mzrandom).
+For questions, issues, or feature requests, please open an issue on the [GitHub repository](https://github.com/mohammadzarghami/mzrandom).
 
 ---
 
@@ -304,6 +304,6 @@ MZRandom تحت مجوز **MIT** ارائه شده است. برای اطلاعا
 
 ## پشتیبانی
 
-برای سوالات، مشکلات یا درخواست ویژگی‌ها، لطفاً یک Issue در [مخزن GitHub](https://github.com/yourusername/mzrandom) باز کنید.
+برای سوالات، مشکلات یا درخواست ویژگی‌ها، لطفاً یک Issue در [مخزن GitHub](https://github.com/mohammadzarghami/mzrandom) باز کنید.
 
 ---
